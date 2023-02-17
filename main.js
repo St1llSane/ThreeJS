@@ -23,13 +23,18 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(size.width, size.height)
 
-let time = Date.now()
+const clock = new THREE.Clock()
 const tick = () => {
-	const currentTime = Date.now()
-	const deltaTime = currentTime - time
-	time = currentTime
+	const elapsedTime = clock.getElapsedTime()
 	
-  cube.rotation.y += 0.001 * deltaTime
+  // cube.rotation.y = elapsedTime * Math.PI * 2
+
+	// cube.position.y = Math.sin(elapsedTime)
+	// cube.position.x = Math.cos(elapsedTime)
+
+	camera.position.y = Math.sin(elapsedTime)
+	camera.position.x = Math.cos(elapsedTime)
+	camera.lookAt(cube.position)
 
   renderer.render(scene, camera)
 

@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import './style.css'
 
 const scene = new THREE.Scene()
@@ -13,49 +14,36 @@ const size = {
   height: 600,
 }
 
-const cursor = {
-  x: 0,
-  y: 0,
-}
-
-window.addEventListener('mousemove', (e) => {
-  console.log(cursor.x)
-  console.log(cursor.y)
-  cursor.x = e.clientX / size.width - 0.5
-  cursor.y = e.clientY / size.height - 0.5
-})
-
 const camera = new THREE.PerspectiveCamera(
   75,
   size.width / size.height,
   0.1,
   100
 )
-// const aspectRatio = size.width / size.height
-// const camera = new THREE.OrthographicCamera(
-//   -1 * aspectRatio,
-//   1 * aspectRatio,
-//   1,
-//   -1,
-//   0.1,
-//   100
-// )
+
 camera.position.z = 3
 camera.lookAt(cube.position)
 scene.add(camera)
 
 const canvas = document.querySelector('.webgl')
+
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
+controls.dampingFactor = 0.03
+controls.minDistance = 3
+controls.maxDistance = 8
+controls.maxPolarAngle = Math.PI / 2
+controls.target = cube.position
+// controls.autoRotate = true
+
 const renderer = new THREE.WebGLRenderer({
   canvas,
 })
 renderer.setSize(size.width, size.height)
 
 const tick = () => {
-  // cube.rotation.y = -cursor.x * Math.PI * 4
-
-  camera.position.x = Math.sin(cursor.x * Math.PI * 4) * 3
-  camera.position.z = Math.cos(cursor.x * Math.PI * 4) * 3
-  camera.lookAt(cube.position)
+  controls.update()
 
   renderer.render(scene, camera)
   window.requestAnimationFrame(tick)

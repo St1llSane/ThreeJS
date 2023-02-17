@@ -51,9 +51,11 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(size.width, size.height)
 
 const tick = () => {
-  camera.position.x = cursor.x * 4
-  camera.position.y = -cursor.y * 4
-	camera.lookAt(cube.position)
+  // cube.rotation.y = -cursor.x * Math.PI * 4
+
+  camera.position.x = Math.sin(cursor.x * Math.PI * 4) * 3
+  camera.position.z = Math.cos(cursor.x * Math.PI * 4) * 3
+  camera.lookAt(cube.position)
 
   renderer.render(scene, camera)
   window.requestAnimationFrame(tick)

@@ -25,6 +25,15 @@ window.addEventListener('resize', () => {
 
   // Update renderer
   renderer.setSize(size.width, size.height)
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+window.addEventListener('dblclick', () => {
+	if (!document.fullscreenElement) {
+		canvas.requestFullscreen()
+	} else {
+		document.exitFullscreen()
+	}
 })
 
 const camera = new THREE.PerspectiveCamera(
@@ -54,6 +63,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas,
 })
 renderer.setSize(size.width, size.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const tick = () => {
   controls.update()

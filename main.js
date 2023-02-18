@@ -4,27 +4,12 @@ import './style.css'
 
 const scene = new THREE.Scene()
 
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
+// Create BufferGeometry
+const positionsArray = new Float32Array([0, 0, 0, 0, 1, 0, 1, 0, 0])
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
 
-// Create geometry
-const points = []
-points.push(new THREE.Vector3(0, 1, 0))
-points.push(new THREE.Vector3(-1, 0, 0))
-points.push(new THREE.Vector3(1, 0, 0))
-
-for (let i = 0; i <= 50; i++) {
-  for (let j = 0; j < 3; j++) {
-    points.push(
-      new THREE.Vector3(
-        (Math.random() - 0.5) * 3,
-        (Math.random() - 0.5) * 3,
-        (Math.random() - 0.5) * 3,
-      )
-    )
-  }
-}
-
-const geometry = new THREE.BufferGeometry().setFromPoints(points)
+const geometry = new THREE.BufferGeometry()
+geometry.setAttribute('position', positionsAttribute)
 
 const material = new THREE.MeshBasicMaterial({
   color: 'yellow',

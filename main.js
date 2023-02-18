@@ -28,6 +28,20 @@ const ambientOcclusionTexture = textureLoader.load('./textures/door/ambientOcclu
 const metalnessTexture = textureLoader.load('./textures/door/metalness.jpg')
 const roughnessTexture = textureLoader.load('./textures/door/roughness.jpg')
 
+// colorTexture.repeat.x = 2
+// colorTexture.repeat.y= 3
+// colorTexture.wrapS = THREE.RepeatWrapping
+// colorTexture.wrapT = THREE.RepeatWrapping
+
+// colorTexture.offset.x = 0.5
+// colorTexture.offset.y = 0.5
+
+colorTexture.rotation = Math.PI / 4
+
+// Pivot point position
+colorTexture.center.x = 0.5
+colorTexture.center.y = 0.5
+
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)

@@ -7,13 +7,24 @@ const scene = new THREE.Scene()
 // const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
 
 // Create geometry
-const points = [];
-points.push(new THREE.Vector3(-1, 0, 0))
+const points = []
 points.push(new THREE.Vector3(0, 1, 0))
+points.push(new THREE.Vector3(-1, 0, 0))
 points.push(new THREE.Vector3(1, 0, 0))
 
-const geometry = new THREE.BufferGeometry().setFromPoints( points )
+for (let i = 0; i <= 50; i++) {
+  for (let j = 0; j < 3; j++) {
+    points.push(
+      new THREE.Vector3(
+        (Math.random() - 0.5) * 3,
+        (Math.random() - 0.5) * 3,
+        (Math.random() - 0.5) * 3,
+      )
+    )
+  }
+}
 
+const geometry = new THREE.BufferGeometry().setFromPoints(points)
 
 const material = new THREE.MeshBasicMaterial({
   color: 'yellow',
@@ -56,7 +67,7 @@ const camera = new THREE.PerspectiveCamera(
   100
 )
 
-camera.position.z = 2
+camera.position.z = 3
 camera.lookAt(cube.position)
 scene.add(camera)
 

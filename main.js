@@ -4,39 +4,22 @@ import * as dat from 'dat.gui'
 import gsap from 'gsap'
 import './style.css'
 
-// Debug UI
-const gui = new dat.GUI({ closed: true, width: 340 })
+// Textures
+const image = new Image()
+const texture = new THREE.Texture(image)
 
-const params = {
-  cubeColor: 0x7255de,
-  spin: () => {
-    gsap.to(cube.rotation, { duration: 1, y: cube.rotation.y + Math.PI * 2 })
-  },
+image.onload = () => {
+  texture.needsUpdate = true
 }
+
+image.src = './textures/door/color.jpg'
 
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: params.cubeColor })
+const material = new THREE.MeshBasicMaterial({ map: texture })
 const cube = new THREE.Mesh(geometry, material)
 scene.add(cube)
-
-// Debug UI
-gui.add(cube.position, 'x', -3, 3, 0.1).name('yellow cube X')
-gui.add(cube.position, 'y', -3, 3, 0.1).name('yellow cube Y')
-gui.add(cube.position, 'z', -3, 3, 0.1).name('yellow cube Z')
-gui.add(cube.rotation, 'y', -Math.PI * 2, Math.PI * 2, 0.1).name('yellow cube rotation X')
-gui.add(cube.rotation, 'x', -Math.PI * 2, Math.PI * 2, 0.1).name('yellow cube rotation Y')
-gui.add(cube.rotation, 'z', -Math.PI * 2, Math.PI * 2, 0.1).name('yellow cube rotation Z')
-
-gui.addColor(params, 'cubeColor').onChange(() => {
-  material.color.set(params.cubeColor)
-})
-
-gui.add(cube, 'visible').name('yellow cube visible')
-gui.add(cube.material, 'wireframe')
-
-gui.add(params, 'spin')
 
 const size = {
   width: window.innerWidth,

@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 import * as dat from 'dat.gui'
 import './style.css'
 
@@ -9,12 +11,32 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Textures
+const textureLoader = new THREE.TextureLoader()
+
+// Fonts
+const fontLoader = new FontLoader()
+fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
+  console.log('loaded')
+  const textGeometry = new TextGeometry('St1ll Sane', {
+    font,
+    size: 0.5,
+    height: 0.2,
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelOffset: 0,
+    bevelSize: 0.02,
+    bevelSegments: 3,
+  })
+  const text = new THREE.Mesh(textGeometry, new THREE.MeshBasicMaterial())
+  scene.add(text)
+})
+
 // Materials
-const material = new THREE.MeshBasicMaterial({ color: 'yellow' })
 
 // Meshes
-const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material)
-scene.add(cube)
+
 
 // Sizes
 const sizes = {
@@ -43,8 +65,6 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.x = 1
-camera.position.y = 1
 camera.position.z = 3
 scene.add(camera)
 

@@ -19,6 +19,17 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 const matcapTexture = textureLoader.load('./textures/matcaps/10.png')
 
+// Parameters
+const params = {
+  color: '#ffffff',
+}
+
+// Material
+const material = new THREE.MeshMatcapMaterial({
+  matcap: matcapTexture,
+  color: params.color,
+})
+
 // Fonts
 const fontLoader = new FontLoader()
 fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
@@ -37,16 +48,15 @@ fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
   textGeometry.center()
   console.log(textGeometry.boundingBox)
 
-  const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture })
   const text = new THREE.Mesh(textGeometry, material)
   scene.add(text)
 
   // Donuts
-  const torusGeometry = new THREE.TorusGeometry(0.3, 0.19, 20, 45)
+  const torusGeometry = new THREE.TorusGeometry(0.3, 0.19, 22, 74)
 
   console.time('donuts')
 
-  for (let i = 0; i < 550; i++) {
+  for (let i = 0; i < 500; i++) {
     const torus = new THREE.Mesh(torusGeometry, material)
 
     torus.position.set(
@@ -98,12 +108,16 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
+camera.position.x = -1.5
 camera.position.z = 3
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+controls.enableRotate = false
+controls.enablePan = false
+controls.minDistance = 2
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -112,10 +126,32 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+// Debug panel
+const gui = new dat.GUI()
+gui.addColor(params, 'color').onChange(() => {
+  material.color.set(params.color)
+})
+
+const cursor = {
+  x: 0,
+  y: 0,
+}
+
+window.addEventListener('mousemove', (e) => {
+  cursor.x = e.clientX / sizes.width - 0.5
+  cursor.y = e.clientY / sizes.height - 0.5
+})
+
 // Animations
 const clock = new THREE.Clock()
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  // OrbitControls distance to target
+  const distance = controls.getDistance()
+
+  camera.position.x = -(cursor.x * 8) * (distance / 10)
+  camera.position.y = cursor.y * 8 * (distance / 10)
 
   // Update controls
   controls.update()

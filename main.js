@@ -34,11 +34,7 @@ fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
     bevelSegments: 3,
   })
   textGeometry.computeBoundingBox()
-  textGeometry.translate(
-    -(textGeometry.boundingBox.max.x - 0.02) / 2,
-    -(textGeometry.boundingBox.max.y - 0.02) / 2,
-    -(textGeometry.boundingBox.max.z - 0.03) / 2
-  )
+	textGeometry.center()
   console.log(textGeometry.boundingBox)
 
   const textMaterial = new THREE.MeshBasicMaterial()

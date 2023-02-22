@@ -22,7 +22,6 @@ const matcapTexture = textureLoader.load('./textures/matcaps/10.png')
 // Fonts
 const fontLoader = new FontLoader()
 fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
-  console.log('loaded')
   const textGeometry = new TextGeometry('Still Sane', {
     font,
     size: 0.5,
@@ -38,15 +37,34 @@ fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
   textGeometry.center()
   console.log(textGeometry.boundingBox)
 
-  const textMaterial = new THREE.MeshMatcapMaterial()
-	textMaterial.matcap = matcapTexture
-	textMaterial.flatShading
-	console.log(textMaterial);
-
-  const text = new THREE.Mesh(textGeometry, textMaterial)
+  const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture })
+  const text = new THREE.Mesh(textGeometry, material)
   scene.add(text)
 
-	
+  // Donuts
+  const torusGeometry = new THREE.TorusGeometry(0.3, 0.19, 20, 45)
+
+  console.time('donuts')
+
+  for (let i = 0; i < 550; i++) {
+    const torus = new THREE.Mesh(torusGeometry, material)
+
+    torus.position.set(
+      (Math.random() - 0.5) * 14,
+      (Math.random() - 0.5) * 14,
+      (Math.random() - 0.5) * 14
+    )
+
+    torus.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0)
+
+    // Generate random numbers from 0.2 to 1.1
+    const torusScale = Math.random() * 0.9 + 0.2
+    torus.scale.set(torusScale, torusScale, torusScale)
+
+    scene.add(torus)
+  }
+
+  console.timeEnd('donuts')
 })
 
 // Materials
@@ -80,7 +98,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.z = 2
+camera.position.z = 3
 scene.add(camera)
 
 // Controls

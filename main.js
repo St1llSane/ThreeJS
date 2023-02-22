@@ -119,6 +119,7 @@ controls.enableDamping = true
 controls.enableRotate = true
 controls.enablePan = false
 controls.minDistance = 2
+controls.maxDistance = 8
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({

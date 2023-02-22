@@ -108,14 +108,15 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.x = -1.5
+camera.position.x = -1
+camera.position.y = 0.5
 camera.position.z = 3
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-controls.enableRotate = false
+controls.enableRotate = true
 controls.enablePan = false
 controls.minDistance = 2
 
@@ -132,15 +133,15 @@ gui.addColor(params, 'color').onChange(() => {
   material.color.set(params.color)
 })
 
-const cursor = {
-  x: 0,
-  y: 0,
-}
-
-window.addEventListener('mousemove', (e) => {
-  cursor.x = e.clientX / sizes.width - 0.5
-  cursor.y = e.clientY / sizes.height - 0.5
-})
+// const cursor = {
+//   x: 0,
+//   y: 0,
+// }
+// 
+// window.addEventListener('mousemove', (e) => {
+//   cursor.x = e.clientX / sizes.width - 0.5
+//   cursor.y = e.clientY / sizes.height - 0.5
+// })
 
 // Animations
 const clock = new THREE.Clock()
@@ -148,10 +149,10 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
   // OrbitControls distance to target
-  const distance = controls.getDistance()
+  // const distance = controls.getDistance()
 
-  camera.position.x = -(cursor.x * 8) * (distance / 10)
-  camera.position.y = cursor.y * 8 * (distance / 10)
+  // camera.position.x = -(cursor.x * 8) * (distance / 10)
+  // camera.position.y = cursor.y * 8 * (distance / 10)
 
   // Update controls
   controls.update()

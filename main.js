@@ -12,17 +12,18 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Axes helper
-const axesHelper = new THREE.AxesHelper()
-scene.add(axesHelper)
+// const axesHelper = new THREE.AxesHelper()
+// scene.add(axesHelper)
 
 // Textures
 const textureLoader = new THREE.TextureLoader()
+const matcapTexture = textureLoader.load('./textures/matcaps/10.png')
 
 // Fonts
 const fontLoader = new FontLoader()
 fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
   console.log('loaded')
-  const textGeometry = new TextGeometry('St1ll Sane', {
+  const textGeometry = new TextGeometry('Still Sane', {
     font,
     size: 0.5,
     height: 0.2,
@@ -34,13 +35,18 @@ fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
     bevelSegments: 3,
   })
   textGeometry.computeBoundingBox()
-	textGeometry.center()
+  textGeometry.center()
   console.log(textGeometry.boundingBox)
 
-  const textMaterial = new THREE.MeshBasicMaterial()
-  textMaterial.wireframe = true
+  const textMaterial = new THREE.MeshMatcapMaterial()
+	textMaterial.matcap = matcapTexture
+	textMaterial.flatShading
+	console.log(textMaterial);
+
   const text = new THREE.Mesh(textGeometry, textMaterial)
   scene.add(text)
+
+	
 })
 
 // Materials

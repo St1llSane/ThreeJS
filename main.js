@@ -11,6 +11,10 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Axes helper
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper)
+
 // Textures
 const textureLoader = new THREE.TextureLoader()
 
@@ -22,21 +26,30 @@ fontLoader.load('./fonts/helvetiker_regular.typeface.json', (font) => {
     font,
     size: 0.5,
     height: 0.2,
-    curveSegments: 12,
+    curveSegments: 5,
     bevelEnabled: true,
+    bevelSize: 0.02,
     bevelThickness: 0.03,
     bevelOffset: 0,
-    bevelSize: 0.02,
     bevelSegments: 3,
   })
-  const text = new THREE.Mesh(textGeometry, new THREE.MeshBasicMaterial())
+  textGeometry.computeBoundingBox()
+  textGeometry.translate(
+    -(textGeometry.boundingBox.max.x - 0.02) / 2,
+    -(textGeometry.boundingBox.max.y - 0.02) / 2,
+    -(textGeometry.boundingBox.max.z - 0.03) / 2
+  )
+  console.log(textGeometry.boundingBox)
+
+  const textMaterial = new THREE.MeshBasicMaterial()
+  textMaterial.wireframe = true
+  const text = new THREE.Mesh(textGeometry, textMaterial)
   scene.add(text)
 })
 
 // Materials
 
 // Meshes
-
 
 // Sizes
 const sizes = {
@@ -65,7 +78,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.z = 3
+camera.position.z = 2
 scene.add(camera)
 
 // Controls

@@ -14,12 +14,12 @@ const scene = new THREE.Scene()
 const canvas = document.querySelector('.webgl')
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001).name('ALIntensity')
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4)
 directionalLight.position.set(2, 2, -1)
 gui
   .add(directionalLight, 'intensity')
@@ -52,6 +52,23 @@ const directionalLightCameraHelper = new THREE.CameraHelper(
 directionalLightCameraHelper.visible = false
 
 scene.add(directionalLight, directionalLightCameraHelper)
+
+// Spot Light
+const spotLigh = new THREE.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3)
+spotLigh.position.set(0, 2, 2)
+
+spotLigh.castShadow = true
+spotLigh.shadow.mapSize.width = 1024
+spotLigh.shadow.mapSize.height = 1024
+spotLigh.shadow.camera.fov = 30
+spotLigh.shadow.camera.near = 1
+spotLigh.shadow.camera.far = 6
+
+scene.add(spotLigh, spotLigh.target)
+
+const spotLighCameraHelper = new THREE.CameraHelper(spotLigh.shadow.camera)
+spotLighCameraHelper.visible = false
+scene.add(spotLighCameraHelper)
 
 // Material
 const material = new THREE.MeshStandardMaterial()

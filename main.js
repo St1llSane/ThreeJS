@@ -14,12 +14,12 @@ const scene = new THREE.Scene()
 const canvas = document.querySelector('.webgl')
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001).name('ALIntensity')
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3)
 directionalLight.position.set(2, 2, -1)
 gui
   .add(directionalLight, 'intensity')
@@ -54,7 +54,7 @@ directionalLightCameraHelper.visible = false
 scene.add(directionalLight, directionalLightCameraHelper)
 
 // Spot Light
-const spotLigh = new THREE.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3)
+const spotLigh = new THREE.SpotLight(0xffffff, 0.3, 10, Math.PI * 0.3)
 spotLigh.position.set(0, 2, 2)
 
 spotLigh.castShadow = true
@@ -69,6 +69,22 @@ scene.add(spotLigh, spotLigh.target)
 const spotLighCameraHelper = new THREE.CameraHelper(spotLigh.shadow.camera)
 spotLighCameraHelper.visible = false
 scene.add(spotLighCameraHelper)
+
+// Point Light
+const pointLight = new THREE.PointLight(0xffffff, 0.3)
+pointLight.position.set(-1, 1, 0)
+
+pointLight.castShadow = true
+spotLigh.shadow.mapSize.width = 1024
+spotLigh.shadow.mapSize.height = 1024
+spotLigh.shadow.camera.near = 0.1
+spotLigh.shadow.camera.far = 5
+
+scene.add(pointLight)
+
+const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera)
+spotLighCameraHelper.visible = false
+scene.add(pointLightCameraHelper)
 
 // Material
 const material = new THREE.MeshStandardMaterial()

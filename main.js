@@ -8,20 +8,26 @@ const canvas = document.querySelector('.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-// Textures
-const textureLoader = new THREE.TextureLoader()
-
 // Particles
-const particlesGeometry = new THREE.SphereGeometry(1, 32, 32)
+const particlesGeometry = new THREE.BufferGeometry()
+const count = 1000
+
+const positions = new Float32Array(count * 3)
+
+for (let i = 0; i < count * 3; i++) {
+  positions[i] = (Math.random() - 0.5) * 12
+}
+
+particlesGeometry.setAttribute(
+  'position',
+  new THREE.BufferAttribute(positions, 3)
+)
 
 // Material
-const particlesMaterial = new THREE.PointsMaterial({
-  size: 0.02,
-  sizeAttenuation: true,
-})
+const material = new THREE.PointsMaterial({ size: 0.06, sizeAttenuation: true })
 
 // Points
-const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+const particles = new THREE.Points(particlesGeometry, material)
 scene.add(particles)
 
 // Sizes

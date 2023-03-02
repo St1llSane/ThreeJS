@@ -21,7 +21,7 @@ const colors = new Float32Array(count * 3)
 
 for (let i = 0; i < count * 3; i++) {
   positions[i] = (Math.random() - 0.5) * 12
-	colors[i] = Math.random()
+  colors[i] = Math.random()
 }
 
 particlesGeometry.setAttribute(
@@ -34,7 +34,6 @@ particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 const material = new THREE.PointsMaterial({
   size: 0.1,
   sizeAttenuation: true,
-  color: '#CA47A3',
   transparent: true,
   alphaMap: particlesTexture,
   // alphaTest: 0.0001
@@ -94,6 +93,20 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  // Update particles
+  // particles.rotation.y = elapsedTime / 10
+
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3
+
+    const x = particlesGeometry.attributes.position.array[i3]
+    particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(
+      elapsedTime + x
+    )
+  }
+
+  particlesGeometry.attributes.position.needsUpdate = true
 
   renderer.render(scene, camera)
   controls.update()

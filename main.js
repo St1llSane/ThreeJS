@@ -2,6 +2,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import './style.css'
 
+// Canvas
+const canvas = document.querySelector('.webgl')
+
 // Scene
 const scene = new THREE.Scene()
 
@@ -28,28 +31,27 @@ camera.position.z = 3
 scene.add(camera)
 
 // Renderer
-const canvas = document.querySelector('.webgl')
 const renderer = new THREE.WebGLRenderer({ canvas })
 renderer.setSize(sizes.width, sizes.height)
 renderer.render(scene, camera)
 
 // Resizing
 window.addEventListener('resize', () => {
-	sizes.width = window.innerWidth
-	sizes.height = window.innerHeight
+  sizes.width = window.innerWidth
+  sizes.height = window.innerHeight
 
-	camera.aspect = sizes.width / sizes.height
-	camera.updateProjectionMatrix()
+  camera.aspect = sizes.width / sizes.height
+  camera.updateProjectionMatrix()
 
-	renderer.setSize(sizes.width, sizes.height)
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  renderer.setSize(sizes.width, sizes.height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 controls.dampingFactor = 0.03
-controls.minDistance = 1
+controls.minDistance = 0.1
 controls.maxDistance = 10
 controls.update()
 
@@ -58,8 +60,6 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
-
-  // cube.rotation.y = elapsedTime / 4
 
   renderer.render(scene, camera)
   controls.update()

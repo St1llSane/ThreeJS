@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui'
+import CANNON from 'cannon'
 import './style.css'
 
 // Debug UI
@@ -24,6 +25,19 @@ const environmentMapTexture = cubeTextureLoader.load([
   '/textures/environmentMaps/0/pz.png',
   '/textures/environmentMaps/0/nz.png',
 ])
+
+// Physics
+const world = new CANNON.World()
+world.gravity.set(0, -9.82, 0)
+
+// Sphere
+const sphereShape = new CANNON.Sphere(0.5)
+const sphereBody = new CANNON.Body({
+  mass: 1,
+  position: new CANNON.Vec3(0, 3, 0),
+  shape: sphereShape,
+})
+world.addBody(sphereBody)
 
 // Meshes
 const sphere = new THREE.Mesh(
@@ -130,9 +144,21 @@ controls.update()
 
 // Animations
 const clock = new THREE.Clock()
+let oldElapsedTime = 0
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+  const deltaTime = elapsedTime - oldElapsedTime
+  oldElapsedTime = elapsedTime
+
+  // Update physics world
+  world.step(1 / 60, deltaTime, 3)
+
+  sphere.position.set(
+    sphereBody.position.x,
+    sphereBody.position.y,
+    sphereBody.position.z
+  )
 
   renderer.render(scene, camera)
   controls.update()

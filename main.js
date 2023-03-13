@@ -39,6 +39,15 @@ const sphereBody = new CANNON.Body({
 })
 world.addBody(sphereBody)
 
+// Floor
+const floorShape = new CANNON.Plane()
+const floorBody = new CANNON.Body({
+  mass: 0,
+  shape: floorShape,
+})
+floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI / 2)
+world.addBody(floorBody)
+
 // Meshes
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(0.5, 32, 32),
@@ -154,11 +163,7 @@ const tick = () => {
   // Update physics world
   world.step(1 / 60, deltaTime, 3)
 
-  sphere.position.set(
-    sphereBody.position.x,
-    sphereBody.position.y,
-    sphereBody.position.z
-  )
+  sphere.position.copy(sphereBody.position)
 
   renderer.render(scene, camera)
   controls.update()

@@ -9,13 +9,22 @@ const gui = new dat.GUI()
 const debugObjects = {}
 
 debugObjects.createSphere = () => {
-  createSphere(Math.random() / 2, {
+  createSphere(Math.random(), {
     x: (Math.random() - 0.5) * 3,
     y: 3,
     z: (Math.random() - 0.5) * 3,
   })
 }
 gui.add(debugObjects, 'createSphere')
+
+debugObjects.createBox = () => {
+  createBox(Math.random(), Math.random(), Math.random(), {
+    x: (Math.random() - 0.5) * 3,
+    y: 3,
+    z: (Math.random() - 0.5) * 3,
+  })
+}
+gui.add(debugObjects, 'createBox')
 
 // Canvas
 const canvas = document.querySelector('.webgl')
@@ -49,7 +58,7 @@ const defaultContactMaterial = new CANNON.ContactMaterial(
   defaultMaterial,
   {
     friction: 0.1,
-    restitution: 0.7,
+    restitution: 0.5,
   }
 )
 world.addContactMaterial(defaultContactMaterial)
@@ -158,8 +167,9 @@ controls.update()
 // Utils
 const objectsToUpdate = []
 
-const sphereMaterial = new THREE.SphereGeometry(1, 20, 20)
-const sphereGeometry = new THREE.MeshStandardMaterial({
+// Create sphere
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
+const material = new THREE.MeshStandardMaterial({
   metalness: 0.3,
   roughness: 0.4,
   envMap: environmentMapTexture,
@@ -167,7 +177,7 @@ const sphereGeometry = new THREE.MeshStandardMaterial({
 
 const createSphere = (radius, position) => {
   // ThreeJS mesh
-  const mesh = new THREE.Mesh(sphereMaterial, sphereGeometry)
+  const mesh = new THREE.Mesh(sphereGeometry, material)
   mesh.scale.set(radius, radius, radius)
   mesh.castShadow = true
   mesh.position.copy(position)
@@ -191,6 +201,38 @@ const createSphere = (radius, position) => {
   })
 }
 createSphere(0.5, { x: 0, y: 3, z: 0 })
+
+// Create box
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
+
+const createBox = (width, height, depth, position) => {
+  // ThreeJS mesh
+  const mesh = new THREE.Mesh(boxGeometry, material)
+  mesh.scale.set(width, height, depth)
+  mesh.castShadow = true
+  mesh.position.copy(position)
+  scene.add(mesh)
+
+  // CannonJS body
+  const shape = new CANNON.Box(
+    new CANNON.Vec3(width / 2, height / 2, depth / 2)
+  )
+  const body = new CANNON.Body({
+    mass: 1,
+    position: new Vec3(0, 3, 2),
+    shape,
+    material: defaultMaterial,
+  })
+  body.position.copy(position)
+  world.addBody(body)
+
+  // Save in objectsToUpdate
+  objectsToUpdate.push({
+    mesh,
+    body,
+  })
+}
+createBox(1, 1, 1, { x: 0, y: 3, z: 2 })
 console.log(objectsToUpdate)
 
 // Animations
@@ -207,6 +249,7 @@ const tick = () => {
 
   objectsToUpdate.forEach((item) => {
     item.mesh.position.copy(item.body.position)
+    item.mesh.quaternion.copy(item.body.quaternion)
   })
 
   renderer.render(scene, camera)

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui'
-import CANNON from 'cannon'
+import CANNON, { Vec3 } from 'cannon'
 import './style.css'
 
 // Debug UI
@@ -44,17 +44,6 @@ const defaultContactMaterial = new CANNON.ContactMaterial(
 )
 world.addContactMaterial(defaultContactMaterial)
 
-// Sphere
-const sphereShape = new CANNON.Sphere(0.5)
-const sphereBody = new CANNON.Body({
-  mass: 1,
-  position: new CANNON.Vec3(0, 3, 0),
-  shape: sphereShape,
-  material: defaultMaterial,
-})
-sphereBody.applyLocalForce(new CANNON.Vec3(250, 0, 0), new CANNON.Vec3(0, 0, 0))
-world.addBody(sphereBody)
-
 // Floor
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body({
@@ -66,18 +55,6 @@ floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI / 2)
 world.addBody(floorBody)
 
 // Meshes
-const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 32, 32),
-  new THREE.MeshStandardMaterial({
-    metalness: 0.3,
-    roughness: 0.4,
-    envMap: environmentMapTexture,
-    envMapIntensity: 0.5,
-  })
-)
-sphere.castShadow = true
-sphere.position.y = 0.5
-scene.add(sphere)
 
 // Floor
 const floor = new THREE.Mesh(
@@ -168,6 +145,43 @@ controls.minDistance = 0.1
 controls.maxDistance = 10
 controls.update()
 
+// Utils
+const objectsToUpdate = []
+
+const createSphere = (radius, position) => {
+  // ThreeJS mesh
+  const mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(radius, 20, 20),
+    new THREE.MeshStandardMaterial({
+      metalness: 0.3,
+      roughness: 0.4,
+      envMap: environmentMapTexture,
+    })
+  )
+  mesh.castShadow = true
+  mesh.position.copy(position)
+  scene.add(mesh)
+
+  // CannonJS body
+  const shape = new CANNON.Sphere(radius)
+  const body = new CANNON.Body({
+    mass: 1,
+    position: new Vec3(0, 3, 0),
+    shape,
+    material: defaultMaterial,
+  })
+  body.position.copy(position)
+  world.addBody(body)
+
+  // Save in objectsToUpdate
+  objectsToUpdate.push({
+    mesh,
+    body,
+  })
+}
+createSphere(0.5, { x: 0, y: 3, z: 0 })
+console.log(objectsToUpdate)
+
 // Animations
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
@@ -178,10 +192,11 @@ const tick = () => {
   oldElapsedTime = elapsedTime
 
   // Update physics world
-  sphereBody.applyForce(new CANNON.Vec3(-0.5, 0, 0), sphereBody.position)
   world.step(1 / 60, deltaTime, 3)
 
-  sphere.position.copy(sphereBody.position)
+  objectsToUpdate.forEach((item) => {
+    item.mesh.position.copy(item.body.position)
+  })
 
   renderer.render(scene, camera)
   controls.update()

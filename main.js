@@ -18,7 +18,15 @@ dracoLoader.setDecoderPath('./draco/')
 const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
-gltfLoader.load('./models/Duck/glTF-Draco/Duck.gltf', (gltf) => {
+let mixer = null
+
+gltfLoader.load('./models/Fox/glTF/Fox.gltf', (gltf) => {
+  mixer = new THREE.AnimationMixer(gltf.scene)
+  const action = mixer.clipAction(gltf.animations[2])
+
+  action.play()
+
+  gltf.scene.scale.set(0.025, 0.025, 0.025)
   scene.add(gltf.scene)
 })
 
@@ -66,7 +74,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.set(2, 2, 2)
+camera.position.set(5, 3, 5)
 scene.add(camera)
 
 // Renderer
@@ -91,7 +99,7 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 controls.dampingFactor = 0.03
 controls.minDistance = 0.1
-controls.maxDistance = 10
+controls.maxDistance = 30
 controls.update()
 
 // Animations
@@ -102,6 +110,11 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime()
   const deltaTime = elapsedTime - previousTime
   previousTime = elapsedTime
+
+  // Update mixer
+  if (mixer) {
+    mixer.update(deltaTime)
+  }
 
   renderer.render(scene, camera)
   controls.update()

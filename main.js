@@ -52,6 +52,7 @@ const sphereBody = new CANNON.Body({
   shape: sphereShape,
   material: defaultMaterial,
 })
+sphereBody.applyLocalForce(new CANNON.Vec3(250, 0, 0), new CANNON.Vec3(0, 0, 0))
 world.addBody(sphereBody)
 
 // Floor
@@ -135,7 +136,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.set(-3, 3, 3)
+camera.position.set(-3, 4, 5)
 scene.add(camera)
 
 // Renderer
@@ -177,6 +178,7 @@ const tick = () => {
   oldElapsedTime = elapsedTime
 
   // Update physics world
+  sphereBody.applyForce(new CANNON.Vec3(-0.5, 0, 0), sphereBody.position)
   world.step(1 / 60, deltaTime, 3)
 
   sphere.position.copy(sphereBody.position)

@@ -6,6 +6,16 @@ import './style.css'
 
 // Debug UI
 const gui = new dat.GUI()
+const debugObjects = {}
+
+debugObjects.createSphere = () => {
+  createSphere(Math.random() / 2, {
+    x: (Math.random() - 0.5) * 3,
+    y: 3,
+    z: (Math.random() - 0.5) * 3,
+  })
+}
+gui.add(debugObjects, 'createSphere')
 
 // Canvas
 const canvas = document.querySelector('.webgl')
@@ -148,16 +158,17 @@ controls.update()
 // Utils
 const objectsToUpdate = []
 
+const sphereMaterial = new THREE.SphereGeometry(1, 20, 20)
+const sphereGeometry = new THREE.MeshStandardMaterial({
+  metalness: 0.3,
+  roughness: 0.4,
+  envMap: environmentMapTexture,
+})
+
 const createSphere = (radius, position) => {
   // ThreeJS mesh
-  const mesh = new THREE.Mesh(
-    new THREE.SphereGeometry(radius, 20, 20),
-    new THREE.MeshStandardMaterial({
-      metalness: 0.3,
-      roughness: 0.4,
-      envMap: environmentMapTexture,
-    })
-  )
+  const mesh = new THREE.Mesh(sphereMaterial, sphereGeometry)
+  mesh.scale.set(radius, radius, radius)
   mesh.castShadow = true
   mesh.position.copy(position)
   scene.add(mesh)

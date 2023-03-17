@@ -80,7 +80,7 @@ camera.position.set(5, 1, -5)
 scene.add(camera)
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({ canvas })
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
 renderer.setSize(sizes.width, sizes.height)
 renderer.physicallyCorrectLights = true
 renderer.outputEncoding = THREE.sRGBEncoding

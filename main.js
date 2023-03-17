@@ -38,6 +38,7 @@ const envMap = cubeTextureLoader.load([
 ])
 scene.background = envMap
 scene.environment = envMap
+envMap.encoding = THREE.sRGBEncoding
 
 // Models
 gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
@@ -81,7 +82,7 @@ scene.add(camera)
 const renderer = new THREE.WebGLRenderer({ canvas })
 renderer.setSize(sizes.width, sizes.height)
 renderer.physicallyCorrectLights = true
-renderer.render(scene, camera)
+renderer.outputEncoding = THREE.sRGBEncoding
 
 // Resizing
 window.addEventListener('resize', () => {
@@ -132,7 +133,7 @@ gui
   .step(0.001)
   .name('LightZ')
 
-debugObject.envMapIntensity = 3
+debugObject.envMapIntensity = 2.3
 gui
   .add(debugObject, 'envMapIntensity')
   .min(0)

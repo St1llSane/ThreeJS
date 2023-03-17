@@ -9,15 +9,17 @@ const canvas = document.querySelector('.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-// Debug UI
-const gui = new dat.GUI()
-
 // Mesh
 const testSphere = new THREE.Mesh(
   new THREE.SphereGeometry(1, 32, 32),
-  new THREE.MeshBasicMaterial()
+  new THREE.MeshStandardMaterial()
 )
 scene.add(testSphere)
+
+// Lights
+const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
+directionalLight.position.set(0.25, 3, -2.25)
+scene.add(directionalLight)
 
 // Sizes
 const sizes = {
@@ -38,6 +40,7 @@ scene.add(camera)
 // Renderer
 const renderer = new THREE.WebGLRenderer({ canvas })
 renderer.setSize(sizes.width, sizes.height)
+renderer.physicallyCorrectLights = true
 renderer.render(scene, camera)
 
 // Resizing
@@ -59,6 +62,34 @@ controls.dampingFactor = 0.03
 controls.minDistance = 0.1
 controls.maxDistance = 10
 controls.update()
+
+// Debug UI
+const gui = new dat.GUI({width: 320})
+
+gui
+  .add(directionalLight, 'intensity')
+  .min(0)
+  .max(10)
+  .step(0.01)
+  .name('DLightIntensity')
+gui
+  .add(directionalLight.position, 'x')
+  .min(-5)
+  .max(5)
+  .step(0.001)
+  .name('LightX')
+gui
+  .add(directionalLight.position, 'y')
+  .min(-5)
+  .max(5)
+  .step(0.001)
+  .name('LightY')
+gui
+  .add(directionalLight.position, 'z')
+  .min(-5)
+  .max(5)
+  .step(0.001)
+  .name('LightZ')
 
 // Animations
 const clock = new THREE.Clock()

@@ -46,6 +46,13 @@ gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
   gltf.scene.scale.set(10, 10, 10)
   gltf.scene.position.set(0, -4, 0)
   gltf.scene.rotation.set(0, Math.PI / 2, 0)
+
+  const children = [...gltf.scene.children]
+  children.forEach((child) => {
+    child.castShadow = true
+    child.receiveShadow = true
+  })
+
   scene.add(gltf.scene)
 
   updateAllMaterials()
@@ -61,7 +68,15 @@ gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
 directionalLight.position.set(0.25, 3, -2.25)
+directionalLight.castShadow = true
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.mapSize.set(1024, 1024)
 scene.add(directionalLight)
+
+// const directionalLightHelper = new THREE.CameraHelper(
+//   directionalLight.shadow.camera, 1
+// )
+// scene.add(directionalLightHelper)
 
 // Sizes
 const sizes = {
@@ -86,6 +101,8 @@ renderer.physicallyCorrectLights = true
 renderer.outputEncoding = THREE.sRGBEncoding
 renderer.toneMapping = THREE.ReinhardToneMapping
 renderer.toneMappingExposure = 1
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 // Resizing
 window.addEventListener('resize', () => {
@@ -104,7 +121,7 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 controls.dampingFactor = 0.03
 controls.minDistance = 0.1
-controls.maxDistance = 10
+controls.maxDistance = 25
 controls.update()
 
 // Debug UI

@@ -17,8 +17,9 @@ const updateAllMaterials = () => {
       child instanceof THREE.Mesh &&
       child.material instanceof THREE.MeshStandardMaterial
     ) {
-      child.material.envMap = envMap
+      // child.material.envMap = envMap
       child.material.envMapIntensity = debugObject.envMapIntensity
+      child.material.needsUpdate = true
     }
   })
 }
@@ -83,6 +84,8 @@ const renderer = new THREE.WebGLRenderer({ canvas })
 renderer.setSize(sizes.width, sizes.height)
 renderer.physicallyCorrectLights = true
 renderer.outputEncoding = THREE.sRGBEncoding
+renderer.toneMapping = THREE.ReinhardToneMapping
+renderer.toneMappingExposure = 1
 
 // Resizing
 window.addEventListener('resize', () => {
@@ -141,6 +144,26 @@ gui
   .step(0.01)
   .name('EnvMapIntensity')
   .onChange(updateAllMaterials)
+
+gui
+  .add(renderer, 'toneMapping', {
+    NTM: THREE.NoToneMapping,
+    LTN: THREE.LinearToneMapping,
+    RTM: THREE.ReinhardToneMapping,
+    CTM: THREE.CineonToneMapping,
+    ATN: THREE.ACESFilmicToneMapping,
+  })
+  .onFinishChange(() => {
+    renderer.toneMapping = Number(renderer.toneMapping)
+    updateAllMaterials()
+  })
+
+gui
+  .add(renderer, 'toneMappingExposure')
+  .min(0)
+  .max(5)
+  .step(0.01)
+  .name('ToneMappingExposure')
 
 // Animations
 const clock = new THREE.Clock()

@@ -42,10 +42,9 @@ scene.environment = envMap
 envMap.encoding = THREE.sRGBEncoding
 
 // Models
-gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
-  gltf.scene.scale.set(10, 10, 10)
-  gltf.scene.position.set(0, -4, 0)
-  gltf.scene.rotation.set(0, Math.PI / 2, 0)
+gltfLoader.load('./models/hamburger.glb', (gltf) => {
+  gltf.scene.scale.set(0.3, 0.3, 0.3)
+  gltf.scene.position.set(0, -1, 0)
 
   const children = [...gltf.scene.children]
   children.forEach((child) => {
@@ -71,6 +70,7 @@ directionalLight.position.set(0.25, 3, -2.25)
 directionalLight.castShadow = true
 directionalLight.shadow.camera.far = 15
 directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.normalBias = 0.02
 scene.add(directionalLight)
 
 // const directionalLightHelper = new THREE.CameraHelper(

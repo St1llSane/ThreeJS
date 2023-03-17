@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import * as dat from 'dat.gui'
 import './style.css'
 
@@ -9,12 +10,51 @@ const canvas = document.querySelector('.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-// Mesh
-const testSphere = new THREE.Mesh(
-  new THREE.SphereGeometry(1, 32, 32),
-  new THREE.MeshStandardMaterial()
-)
-scene.add(testSphere)
+// Update all materials
+const updateAllMaterials = () => {
+  scene.traverse((child) => {
+    if (
+      child instanceof THREE.Mesh &&
+      child.material instanceof THREE.MeshStandardMaterial
+    ) {
+      child.material.envMap = envMap
+      child.material.envMapIntensity = debugObject.envMapIntensity
+    }
+  })
+}
+
+// Loaders
+const gltfLoader = new GLTFLoader()
+const cubeTextureLoader = new THREE.CubeTextureLoader()
+
+// Env Map
+const envMap = cubeTextureLoader.load([
+  './textures/environmentMaps/0/px.jpg',
+  './textures/environmentMaps/0/nx.jpg',
+  './textures/environmentMaps/0/py.jpg',
+  './textures/environmentMaps/0/ny.jpg',
+  './textures/environmentMaps/0/pz.jpg',
+  './textures/environmentMaps/0/nz.jpg',
+])
+scene.background = envMap
+scene.environment = envMap
+
+// Models
+gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
+  gltf.scene.scale.set(10, 10, 10)
+  gltf.scene.position.set(0, -4, 0)
+  gltf.scene.rotation.set(0, Math.PI / 2, 0)
+  scene.add(gltf.scene)
+
+  updateAllMaterials()
+
+  gui
+    .add(gltf.scene.rotation, 'y')
+    .min(-Math.PI)
+    .max(Math.PI)
+    .step(0.001)
+    .name('ModelRotation')
+})
 
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
@@ -34,7 +74,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 )
-camera.position.set(4, 1, -4)
+camera.position.set(5, 1, -5)
 scene.add(camera)
 
 // Renderer
@@ -64,7 +104,8 @@ controls.maxDistance = 10
 controls.update()
 
 // Debug UI
-const gui = new dat.GUI({width: 320})
+const gui = new dat.GUI({ width: 320 })
+const debugObject = {}
 
 gui
   .add(directionalLight, 'intensity')
@@ -90,6 +131,15 @@ gui
   .max(5)
   .step(0.001)
   .name('LightZ')
+
+debugObject.envMapIntensity = 3
+gui
+  .add(debugObject, 'envMapIntensity')
+  .min(0)
+  .max(10)
+  .step(0.01)
+  .name('EnvMapIntensity')
+  .onChange(updateAllMaterials)
 
 // Animations
 const clock = new THREE.Clock()

@@ -1,14 +1,15 @@
 import * as THREE from 'three'
-import Sizes from './Utils/Sizes'
-import Time from './Utils/Time'
-import Camera from './Camera'
-import Renderer from './Renderer'
-import World from './World/World'
+import Sizes from './Utils/Sizes.js'
+import Time from './Utils/Time.js'
+import Camera from './Camera.js'
+import Renderer from './Renderer.js'
+import World from './World/World.js'
 
 let instance = null
 
-export default class Base {
+export default class Experience {
   constructor(_canvas) {
+    // Singleton
     if (instance) {
       return instance
     }
@@ -23,14 +24,14 @@ export default class Base {
     this.scene = new THREE.Scene()
     this.camera = new Camera()
     this.renderer = new Renderer()
-		this.world = new World()
+    this.world = new World()
 
-    // Resize events
+    // Resize event
     this.sizes.on('resize', () => {
       this.resize()
     })
 
-		// Tick events
+    // Time tick event
     this.time.on('tick', () => {
       this.update()
     })

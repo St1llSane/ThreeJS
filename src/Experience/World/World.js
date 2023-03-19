@@ -1,10 +1,10 @@
 import * as THREE from 'three'
-import Base from '../Base'
+import Experience from '../Experience'
 
 export default class World {
   constructor() {
-    this.base = new Base()
-    this.scene = this.base.scene
+    this.experience = new Experience()
+    this.scene = this.experience.scene
 
     // Test mesh
     const testMesh = new THREE.Mesh(

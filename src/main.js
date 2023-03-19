@@ -1,17 +1,13 @@
-import Robot from './Robot'
-import FlyingRobot from './FlyingRobot'
+import '../style.css'
+import Base from './Base/Base'
 
-const wallE = new Robot('Wall-E', 0)
+const base = new Base(document.querySelector('canvas.webgl'))
 
-const ultron = new FlyingRobot('Ultron', 2)
-
-const astroBoy = new FlyingRobot('Astro Boy', 2)
 
 // import * as THREE from 'three'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 // import * as dat from 'dat.gui'
-// import './style.css'
 
 // /**
 //  * Loaders
@@ -39,7 +35,7 @@ const astroBoy = new FlyingRobot('Astro Boy', 2)
 // const updateAllMaterials = () => {
 //   scene.traverse((child) => {
 //     if (
-//       child instanceof THREE.Mesh &&
+//       child instanceof THREE.Mesh &&`
 //       child.material instanceof THREE.MeshStandardMaterial
 //     ) {
 //       // child.material.envMap = environmentMap

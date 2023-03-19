@@ -1,14 +1,21 @@
 class Robot {
-  constructor(name) {
+  constructor(name, legs) {
     this.name = name
+    this.legs = legs
 
+    console.log(`My name is ${this.name} and i have ${this.legs} legs`)
+  }
+
+  sayHi() {
     console.log(`My name is ${this.name}`)
   }
 }
 
-const wallE = new Robot('Wall-E')
-const ultron = new Robot('Ultron')
-const astroBoy = new Robot('Astro Boy')
+const wallE = new Robot('Wall-E', 0)
+const ultron = new Robot('Ultron', 2)
+const astroBoy = new Robot('Astro Boy', 2)
+
+wallE.sayHi()
 
 // import * as THREE from 'three'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'

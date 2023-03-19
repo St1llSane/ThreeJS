@@ -7,7 +7,6 @@ export default class Resources extends EventEmitter {
     super()
 
     this.sources = sources
-    console.log(this.sources)
 
     this.items = {}
     this.toLoad = this.sources.length
